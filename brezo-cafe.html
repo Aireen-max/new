@@ -1,0 +1,1383 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Brezo Café — Sheikh Sarai, New Delhi</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --ink:      #1A1208;
+      --bark:     #3D2B1A;
+      --copper:   #B5622A;
+      --sand:     #E8D9C0;
+      --cream:    #FAF5EE;
+      --mist:     #F2EAD8;
+      --leaf:     #4E5E3A;
+      --warm-grey:#8A7A6A;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--cream);
+      color: var(--ink);
+      cursor: none;
+      overflow-x: hidden;
+    }
+
+    /* Custom cursor */
+    .cursor {
+      width: 12px; height: 12px;
+      background: var(--copper);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 99999;
+      transition: transform 0.15s ease, width 0.2s, height 0.2s;
+      transform: translate(-50%, -50%);
+    }
+
+    .cursor-ring {
+      width: 36px; height: 36px;
+      border: 1.5px solid var(--copper);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      transition: all 0.12s ease;
+      opacity: 0.5;
+    }
+
+    /* ── GRAIN OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0.4;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 20px 56px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: background 0.4s, box-shadow 0.4s;
+    }
+
+    nav.scrolled {
+      background: rgba(250,245,238,0.96);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 rgba(61,43,26,0.1);
+    }
+
+    .nav-logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 26px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      color: var(--bark);
+      text-decoration: none;
+    }
+
+    .nav-logo span { color: var(--copper); font-style: italic; }
+
+    .nav-links {
+      display: flex;
+      gap: 36px;
+      list-style: none;
+      align-items: center;
+    }
+
+    .nav-links a {
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--bark);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--copper);
+      transition: width 0.3s ease;
+    }
+
+    .nav-links a:hover { color: var(--copper); }
+    .nav-links a:hover::after { width: 100%; }
+
+    .nav-reserve {
+      background: var(--copper) !important;
+      color: white !important;
+      padding: 10px 24px !important;
+      border-radius: 2px;
+      letter-spacing: 1.5px;
+    }
+
+    .nav-reserve::after { display: none !important; }
+    .nav-reserve:hover { background: var(--bark) !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      background: var(--bark);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 120px 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 20% 80%, rgba(181,98,42,0.25) 0%, transparent 60%);
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 30px;
+      padding: 8px 18px;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--sand);
+      margin-bottom: 32px;
+      width: fit-content;
+      animation: fadeUp 0.6s 0.1s both;
+    }
+
+    .hero-badge span { width: 6px; height: 6px; background: var(--copper); border-radius: 50%; }
+
+    .hero-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(52px, 6vw, 88px);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--cream);
+      margin-bottom: 28px;
+      animation: fadeUp 0.6s 0.2s both;
+    }
+
+    .hero-title em {
+      font-style: italic;
+      color: var(--copper);
+    }
+
+    .hero-desc {
+      color: rgba(232,217,192,0.75);
+      font-size: 15px;
+      line-height: 1.8;
+      max-width: 400px;
+      margin-bottom: 48px;
+      font-weight: 300;
+      animation: fadeUp 0.6s 0.3s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      animation: fadeUp 0.6s 0.4s both;
+    }
+
+    .btn-fill {
+      background: var(--copper);
+      color: white;
+      padding: 14px 36px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 2px;
+      cursor: none;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+
+    .btn-fill:hover { background: #9a5224; transform: translateY(-2px); }
+
+    .btn-outline {
+      border: 1px solid rgba(232,217,192,0.4);
+      color: var(--sand);
+      padding: 14px 36px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-outline:hover { border-color: var(--sand); color: white; }
+
+    .hero-info-strip {
+      position: absolute;
+      bottom: 80px;
+      right: -20px;
+      background: var(--cream);
+      padding: 20px 28px;
+      border-left: 3px solid var(--copper);
+      animation: fadeUp 0.6s 0.5s both;
+    }
+
+    .open-status { font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--warm-grey); margin-bottom: 4px; }
+    .open-time { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--bark); }
+    .open-dot { display: inline-block; width: 8px; height: 8px; background: #e05050; border-radius: 50%; margin-right: 6px; }
+    .open-dot.open { background: #5a9e52; }
+
+    .hero-right {
+      background: var(--mist);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-visual {
+      width: 100%;
+      height: 100%;
+      background:
+        radial-gradient(ellipse at 60% 40%, rgba(181,98,42,0.2) 0%, transparent 55%),
+        radial-gradient(ellipse at 20% 80%, rgba(78,94,58,0.15) 0%, transparent 50%),
+        linear-gradient(160deg, #E8D9C0 0%, #D4C4A0 50%, #C0AE88 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .coffee-ring {
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      border: 1px solid rgba(181,98,42,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: rotateSlow 20s linear infinite;
+    }
+
+    .coffee-ring::before {
+      content: '';
+      position: absolute;
+      width: 240px; height: 240px;
+      border-radius: 50%;
+      border: 1px dashed rgba(181,98,42,0.2);
+    }
+
+    .coffee-cup {
+      width: 160px; height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 38% 38%, #6B3A20, #2C1A0E);
+      box-shadow:
+        0 20px 60px rgba(44,26,14,0.4),
+        inset 0 -6px 12px rgba(0,0,0,0.3),
+        inset 0 6px 12px rgba(181,98,42,0.2);
+      position: relative;
+      animation: rotateSlow 20s linear infinite reverse;
+    }
+
+    .coffee-cup::after {
+      content: '';
+      position: absolute;
+      top: 20%; left: 20%;
+      width: 30%; height: 30%;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(181,98,42,0.4), transparent);
+    }
+
+    @keyframes rotateSlow { to { transform: rotate(360deg); } }
+
+    .brezo-wordmark {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: var(--bark);
+      opacity: 0.5;
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      background: var(--copper);
+      padding: 28px 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    .strip-items {
+      display: flex;
+      gap: 60px;
+    }
+
+    .strip-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .strip-icon { font-size: 22px; }
+
+    .strip-item h4 { font-size: 14px; font-weight: 500; color: white; }
+    .strip-item p { font-size: 12px; color: rgba(255,255,255,0.7); }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 120px 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      background: var(--cream);
+    }
+
+    .about-visual {
+      position: relative;
+    }
+
+    .about-card-main {
+      background: var(--bark);
+      border-radius: 4px;
+      height: 440px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 80px;
+      background: linear-gradient(145deg, #4E5E3A, #2C3A20);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .about-card-main::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 60%, rgba(181,98,42,0.3), transparent 60%);
+    }
+
+    .about-float {
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      background: var(--copper);
+      padding: 24px 28px;
+      border-radius: 4px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 16px 48px rgba(181,98,42,0.4);
+    }
+
+    .about-float strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      font-weight: 300;
+      display: block;
+    }
+
+    .about-float span { font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; opacity: 0.85; }
+
+    .about-content { padding-right: 20px; }
+
+    .eyebrow {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(34px, 3.5vw, 52px);
+      font-weight: 400;
+      line-height: 1.15;
+      margin-bottom: 24px;
+      color: var(--bark);
+    }
+
+    .section-title em { font-style: italic; color: var(--copper); }
+
+    .body-text {
+      font-size: 15px;
+      line-height: 1.85;
+      color: var(--warm-grey);
+      margin-bottom: 16px;
+      font-weight: 300;
+    }
+
+    .address-block {
+      margin-top: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .addr-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--bark);
+    }
+
+    .addr-icon {
+      width: 36px; height: 36px;
+      background: var(--mist);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 15px;
+      flex-shrink: 0;
+    }
+
+    .addr-row span { font-weight: 300; color: var(--warm-grey); }
+
+    .directions-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 24px;
+      background: var(--bark);
+      color: var(--cream);
+      padding: 12px 28px;
+      border-radius: 2px;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      transition: background 0.2s;
+    }
+
+    .directions-btn:hover { background: var(--copper); }
+
+    /* ── MENU ── */
+    .menu-section {
+      padding: 120px 60px;
+      background: var(--bark);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .menu-section::before {
+      content: 'MENU';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 240px;
+      font-weight: 300;
+      color: rgba(255,255,255,0.02);
+      pointer-events: none;
+      white-space: nowrap;
+      letter-spacing: 20px;
+    }
+
+    .menu-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .menu-header .section-title { color: var(--cream); }
+    .menu-header .eyebrow { color: var(--copper); }
+    .menu-header p { color: rgba(232,217,192,0.6); font-size: 15px; margin-top: 12px; }
+
+    .menu-filters {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 56px;
+    }
+
+    .filter-btn {
+      padding: 9px 22px;
+      border: 1px solid rgba(232,217,192,0.2);
+      background: transparent;
+      color: rgba(232,217,192,0.6);
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      border-radius: 30px;
+      cursor: none;
+      transition: all 0.2s;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--copper);
+      border-color: var(--copper);
+      color: white;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .menu-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: transform 0.3s, background 0.3s;
+    }
+
+    .menu-card:hover {
+      transform: translateY(-8px);
+      background: rgba(255,255,255,0.07);
+    }
+
+    .mc-img {
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+    }
+
+    .g1 { background: linear-gradient(135deg, #2C1A0E, #5A3020); }
+    .g2 { background: linear-gradient(135deg, #3D2B1A, #7A5030); }
+    .g3 { background: linear-gradient(135deg, #1A2A10, #3E5830); }
+    .g4 { background: linear-gradient(135deg, #2A1A30, #5A3A60); }
+    .g5 { background: linear-gradient(135deg, #3A2010, #8B5A30); }
+    .g6 { background: linear-gradient(135deg, #1A2A2A, #3A5A5A); }
+    .g7 { background: linear-gradient(135deg, #2A2010, #6A5030); }
+    .g8 { background: linear-gradient(135deg, #301A1A, #703030); }
+
+    .mc-body { padding: 18px; }
+    .mc-body h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 17px;
+      color: var(--cream);
+      margin-bottom: 5px;
+      font-weight: 400;
+    }
+    .mc-body p { font-size: 12px; color: rgba(232,217,192,0.5); line-height: 1.6; margin-bottom: 14px; font-weight: 300; }
+    .mc-footer { display: flex; justify-content: space-between; align-items: center; }
+    .mc-price { font-size: 16px; font-weight: 500; color: var(--copper); }
+    .mc-tag {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(232,217,192,0.15);
+      color: rgba(232,217,192,0.4);
+    }
+
+    .menu-items-data { display: none; }
+
+    /* ── HOURS ── */
+    .hours-section {
+      padding: 100px 60px;
+      background: var(--mist);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .hours-title { font-family: 'Cormorant Garamond', serif; font-size: 42px; font-weight: 400; color: var(--bark); margin-bottom: 10px; }
+    .hours-sub { color: var(--warm-grey); font-size: 14px; margin-bottom: 40px; font-weight: 300; }
+
+    .hours-table { width: 100%; }
+
+    .hours-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(61,43,26,0.08);
+      font-size: 15px;
+    }
+
+    .hours-row .day { color: var(--bark); font-weight: 400; }
+    .hours-row .time { color: var(--warm-grey); font-weight: 300; }
+    .hours-row.today { background: rgba(181,98,42,0.06); padding: 16px 12px; margin: 0 -12px; border-radius: 4px; border-bottom: none; }
+    .hours-row.today .day { color: var(--copper); font-weight: 500; }
+    .hours-row.today .time { color: var(--copper); }
+
+    .closed-badge {
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 20px;
+      background: rgba(224,80,80,0.1);
+      color: #e05050;
+    }
+
+    .map-embed {
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 20px 60px rgba(61,43,26,0.12);
+      position: relative;
+    }
+
+    .map-placeholder {
+      width: 100%;
+      height: 400px;
+      background: linear-gradient(145deg, #4A5240, #2C3828);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      color: var(--cream);
+    }
+
+    .map-pin { font-size: 48px; }
+    .map-addr {
+      text-align: center;
+      font-size: 13px;
+      color: rgba(232,217,192,0.7);
+      line-height: 1.8;
+    }
+
+    .map-btn {
+      margin-top: 8px;
+      background: var(--copper);
+      color: white;
+      padding: 10px 28px;
+      border-radius: 2px;
+      font-size: 13px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+
+    .map-btn:hover { background: #9a5224; }
+
+    /* ── REVIEWS ── */
+    .reviews-section {
+      padding: 120px 60px;
+      background: var(--cream);
+    }
+
+    .reviews-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 60px;
+    }
+
+    .rating-summary {
+      text-align: right;
+    }
+
+    .big-rating {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 64px;
+      font-weight: 300;
+      color: var(--bark);
+      line-height: 1;
+    }
+
+    .stars-row { color: var(--copper); font-size: 18px; margin: 4px 0; }
+    .review-count { font-size: 13px; color: var(--warm-grey); }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-bottom: 48px;
+    }
+
+    .review-card {
+      background: var(--mist);
+      border-radius: 4px;
+      padding: 32px;
+      position: relative;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+
+    .review-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(61,43,26,0.08);
+    }
+
+    .review-quote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 56px;
+      color: var(--copper);
+      opacity: 0.3;
+      line-height: 0.8;
+      margin-bottom: 12px;
+    }
+
+    .review-stars { color: var(--copper); font-size: 13px; margin-bottom: 14px; }
+    .review-text { font-size: 14px; line-height: 1.8; color: #5a4030; margin-bottom: 24px; font-weight: 300; }
+
+    .reviewer {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .r-avatar {
+      width: 42px; height: 42px;
+      border-radius: 50%;
+      background: var(--bark);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 18px;
+      color: var(--cream);
+      flex-shrink: 0;
+    }
+
+    .r-name { font-size: 14px; font-weight: 500; color: var(--bark); }
+    .r-date { font-size: 12px; color: var(--warm-grey); }
+
+    .write-review-btn {
+      display: block;
+      width: 100%;
+      padding: 16px;
+      text-align: center;
+      border: 1.5px dashed rgba(61,43,26,0.2);
+      border-radius: 4px;
+      color: var(--warm-grey);
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.5px;
+      cursor: none;
+      transition: all 0.2s;
+      background: transparent;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .write-review-btn:hover {
+      border-color: var(--copper);
+      color: var(--copper);
+      background: rgba(181,98,42,0.04);
+    }
+
+    /* ── REVIEW MODAL ── */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(26,18,8,0.7);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+    }
+
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+
+    .modal {
+      background: var(--cream);
+      border-radius: 8px;
+      padding: 48px;
+      width: 100%;
+      max-width: 520px;
+      position: relative;
+      transform: translateY(20px);
+      transition: transform 0.3s;
+    }
+
+    .modal-overlay.active .modal { transform: translateY(0); }
+
+    .modal h3 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 28px;
+      color: var(--bark);
+      margin-bottom: 6px;
+    }
+
+    .modal p { font-size: 13px; color: var(--warm-grey); margin-bottom: 28px; }
+
+    .star-picker {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 24px;
+    }
+
+    .star-pick {
+      font-size: 28px;
+      cursor: none;
+      opacity: 0.3;
+      transition: opacity 0.1s, transform 0.1s;
+    }
+
+    .star-pick.lit { opacity: 1; }
+    .star-pick:hover { transform: scale(1.2); }
+
+    .form-field {
+      margin-bottom: 20px;
+    }
+
+    .form-field label {
+      display: block;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--bark);
+      margin-bottom: 8px;
+    }
+
+    .form-field input,
+    .form-field textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--mist);
+      border: 1.5px solid transparent;
+      border-radius: 4px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      color: var(--bark);
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+    }
+
+    .form-field input:focus,
+    .form-field textarea:focus { border-color: var(--copper); }
+
+    .modal-close {
+      position: absolute;
+      top: 20px; right: 20px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      cursor: none;
+      color: var(--warm-grey);
+      transition: color 0.2s;
+    }
+
+    .modal-close:hover { color: var(--bark); }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--copper);
+      color: white;
+      border: none;
+      border-radius: 2px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: none;
+      font-family: 'Outfit', sans-serif;
+      transition: background 0.2s;
+    }
+
+    .submit-btn:hover { background: var(--bark); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--ink);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-top {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+
+    .footer-brand .nav-logo { font-size: 28px; display: block; margin-bottom: 16px; }
+    .footer-tagline { color: rgba(232,217,192,0.5); font-size: 14px; line-height: 1.8; max-width: 280px; font-weight: 300; }
+
+    .footer-col h5 {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--copper);
+      margin-bottom: 20px;
+    }
+
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col ul a { color: rgba(232,217,192,0.5); text-decoration: none; font-size: 14px; font-weight: 300; transition: color 0.2s; }
+    .footer-col ul a:hover { color: var(--sand); }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-bottom p { color: rgba(232,217,192,0.3); font-size: 12px; font-weight: 300; }
+
+    /* Animations */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: var(--bark);
+      color: var(--cream);
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-size: 14px;
+      z-index: 9999;
+      transition: transform 0.4s ease;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    }
+
+    .toast.show { transform: translateX(-50%) translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- Custom cursor -->
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-ring" id="cursorRing"></div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">✓ Review submitted — thank you!</div>
+
+  <!-- ── NAV ── -->
+  <nav id="navbar">
+    <a href="#" class="nav-logo">BREZO <span>Café</span></a>
+    <ul class="nav-links">
+      <li><a href="#about">Story</a></li>
+      <li><a href="#menu">Menu</a></li>
+      <li><a href="#hours">Hours</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#reviews" class="nav-reserve">Write a Review</a></li>
+    </ul>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <section class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span></span> Sheikh Sarai, New Delhi
+      </div>
+      <h1 class="hero-title">A Café<br/>for the <em>Slow<br/>Mornings</em></h1>
+      <p class="hero-desc">Tucked into Phase II, Sheikh Sarai — Brezo is where New Delhi slows down, sips something warm, and stays a little longer than planned.</p>
+      <div class="hero-actions">
+        <a href="#menu" class="btn-fill">View Menu</a>
+        <a href="#hours" class="btn-outline">Hours & Location</a>
+      </div>
+
+      <div class="hero-info-strip">
+        <div class="open-status"><span class="open-dot"></span>Currently Closed</div>
+        <div class="open-time">Opens 10:00 am · Sun</div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-visual">
+        <div class="coffee-ring">
+          <div class="coffee-cup"></div>
+        </div>
+        <div class="brezo-wordmark">Brezo · Est. New Delhi</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── STRIP ── -->
+  <div class="about-strip reveal">
+    <div class="strip-items">
+      <div class="strip-item">
+        <span class="strip-icon">☕</span>
+        <div><h4>Specialty Brews</h4><p>Single origin & blends</p></div>
+      </div>
+      <div class="strip-item">
+        <span class="strip-icon">🥐</span>
+        <div><h4>Fresh Bakes</h4><p>Made daily in-house</p></div>
+      </div>
+      <div class="strip-item">
+        <span class="strip-icon">📍</span>
+        <div><h4>Sheikh Sarai</h4><p>Pocket K, Phase II</p></div>
+      </div>
+      <div class="strip-item">
+        <span class="strip-icon">🕙</span>
+        <div><h4>Open Daily</h4><p>From 10:00 am</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── ABOUT ── -->
+  <section class="about" id="about">
+    <div class="about-visual reveal">
+      <div class="about-card-main">🌿</div>
+      <div class="about-float">
+        <strong>10am</strong>
+        <span>Opens Daily</span>
+      </div>
+    </div>
+    <div class="about-content reveal">
+      <p class="eyebrow">Our Story</p>
+      <h2 class="section-title">New Delhi's<br/><em>Neighbourhood</em><br/>Café</h2>
+      <p class="body-text">Brezo is a quiet corner in the heart of Sheikh Sarai — a space where the city's pace softens. Whether you're working, reading, or just watching the world go by, there's a seat and a cup waiting for you.</p>
+      <p class="body-text">We believe coffee should feel like a conversation — unhurried, warm, and always welcome.</p>
+
+      <div class="address-block">
+        <div class="addr-row">
+          <div class="addr-icon">📍</div>
+          <div>
+            <strong>Address</strong><br/>
+            <span>2, Pocket K, Phase II, Sheikh Sarai<br/>New Delhi, Delhi 110017</span>
+          </div>
+        </div>
+        <div class="addr-row">
+          <div class="addr-icon">🕙</div>
+          <div>
+            <strong>Hours</strong><br/>
+            <span>Opens 10:00 am daily</span>
+          </div>
+        </div>
+      </div>
+
+      <a href="https://maps.google.com/?q=Brezo+Cafe+Sheikh+Sarai+New+Delhi" target="_blank" class="directions-btn">
+        ↗ Get Directions · ~31 mins
+      </a>
+    </div>
+  </section>
+
+  <!-- ── MENU ── -->
+  <section class="menu-section" id="menu">
+    <div class="menu-header reveal">
+      <p class="eyebrow">What We Serve</p>
+      <h2 class="section-title" style="color:var(--cream)">The <em>Menu</em></h2>
+      <p>Crafted with care, served with warmth</p>
+    </div>
+
+    <div class="menu-filters reveal">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="coffee">Coffee</button>
+      <button class="filter-btn" data-filter="cold">Cold Drinks</button>
+      <button class="filter-btn" data-filter="food">Food</button>
+      <button class="filter-btn" data-filter="dessert">Desserts</button>
+    </div>
+
+    <div class="menu-grid reveal" id="menuGrid"></div>
+  </section>
+
+  <!-- ── HOURS ── -->
+  <section class="hours-section" id="hours">
+    <div class="reveal">
+      <p class="eyebrow">Visit Us</p>
+      <h2 class="hours-title">Hours &<br/>Location</h2>
+      <p class="hours-sub">We're open all week — come find us in Sheikh Sarai.</p>
+
+      <div class="hours-table">
+        <div class="hours-row"><span class="day">Monday</span><span class="time">10:00 am – 10:00 pm</span></div>
+        <div class="hours-row"><span class="day">Tuesday</span><span class="time">10:00 am – 10:00 pm</span></div>
+        <div class="hours-row"><span class="day">Wednesday</span><span class="time">10:00 am – 10:00 pm</span></div>
+        <div class="hours-row"><span class="day">Thursday</span><span class="time">10:00 am – 10:00 pm</span></div>
+        <div class="hours-row"><span class="day">Friday</span><span class="time">10:00 am – 11:00 pm</span></div>
+        <div class="hours-row"><span class="day">Saturday</span><span class="time">10:00 am – 11:00 pm</span></div>
+        <div class="hours-row today"><span class="day">Sunday ← Today</span><span class="time">10:00 am – 9:00 pm</span></div>
+      </div>
+    </div>
+
+    <div class="map-embed reveal">
+      <div class="map-placeholder">
+        <div class="map-pin">📍</div>
+        <div class="map-addr">
+          <strong style="font-size:18px;font-family:'Cormorant Garamond',serif;">Brezo Café</strong><br/>
+          2, Pocket K, Phase II<br/>Sheikh Sarai, New Delhi 110017
+        </div>
+        <a href="https://maps.google.com/?q=Brezo+Cafe+Sheikh+Sarai+New+Delhi" target="_blank" class="map-btn">Open in Maps</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── REVIEWS ── -->
+  <section class="reviews-section" id="reviews">
+    <div class="reviews-header reveal">
+      <div>
+        <p class="eyebrow">Guest Reviews</p>
+        <h2 class="section-title">What People<br/><em>Are Saying</em></h2>
+      </div>
+      <div class="rating-summary">
+        <div class="big-rating">4.5</div>
+        <div class="stars-row">★★★★½</div>
+        <div class="review-count">Based on guest reviews</div>
+      </div>
+    </div>
+
+    <div class="reviews-grid reveal" id="reviewsGrid"></div>
+
+    <button class="write-review-btn reveal" id="openModal">
+      ✦ Share your experience at Brezo Café
+    </button>
+  </section>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="nav-logo" href="#">BREZO <span style="color:var(--copper);font-style:italic">Café</span></a>
+        <p class="footer-tagline">A warm corner in Sheikh Sarai, New Delhi. Come for the coffee, stay for the feeling.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigate</h5>
+        <ul>
+          <li><a href="#about">Our Story</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#hours">Hours</a></li>
+          <li><a href="#reviews">Reviews</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Find Us</h5>
+        <ul>
+          <li><a href="#">2, Pocket K, Phase II</a></li>
+          <li><a href="#">Sheikh Sarai, Delhi</a></li>
+          <li><a href="#">110017</a></li>
+          <li><a href="https://maps.google.com/?q=Brezo+Cafe+Sheikh+Sarai" target="_blank">Get Directions →</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Brezo Café, New Delhi. All rights reserved.</p>
+      <p style="color:rgba(232,217,192,0.2)">Made with ☕ in Delhi</p>
+    </div>
+  </footer>
+
+  <!-- ── REVIEW MODAL ── -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="closeModal">✕</button>
+      <h3>Leave a Review</h3>
+      <p>Share your Brezo experience with others</p>
+
+      <div class="star-picker" id="starPicker">
+        <span class="star-pick" data-val="1">★</span>
+        <span class="star-pick" data-val="2">★</span>
+        <span class="star-pick" data-val="3">★</span>
+        <span class="star-pick" data-val="4">★</span>
+        <span class="star-pick" data-val="5">★</span>
+      </div>
+
+      <div class="form-field">
+        <label>Your Name</label>
+        <input type="text" id="reviewName" placeholder="e.g. Priya S."/>
+      </div>
+      <div class="form-field">
+        <label>Your Review</label>
+        <textarea id="reviewText" rows="4" placeholder="What did you love about Brezo?"></textarea>
+      </div>
+      <button class="submit-btn" id="submitReview">Submit Review</button>
+    </div>
+  </div>
+
+  <script>
+    // ── Cursor ──
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursorRing');
+    let mx = 0, my = 0, rx = 0, ry = 0;
+
+    document.addEventListener('mousemove', e => {
+      mx = e.clientX; my = e.clientY;
+      cursor.style.left = mx + 'px';
+      cursor.style.top = my + 'px';
+    });
+
+    function animateRing() {
+      rx += (mx - rx) * 0.12;
+      ry += (my - ry) * 0.12;
+      ring.style.left = rx + 'px';
+      ring.style.top = ry + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.querySelectorAll('a, button').forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1.8)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1.4)';
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+        ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      });
+    });
+
+    // ── Sticky nav ──
+    window.addEventListener('scroll', () => {
+      document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 60);
+    });
+
+    // ── Scroll reveal ──
+    const reveals = document.querySelectorAll('.reveal');
+    const io = new IntersectionObserver(entries => {
+      entries.forEach((e, i) => {
+        if (e.isIntersecting) {
+          setTimeout(() => e.target.classList.add('visible'), i * 80);
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+    reveals.forEach(r => io.observe(r));
+
+    // ── Menu data ──
+    const menuItems = [
+      { name: 'Brezo Espresso', desc: 'Our house double shot, rich crema', price: '₹120', cat: 'coffee', emoji: '☕', bg: 'g1' },
+      { name: 'Café Latte', desc: 'Espresso, silky steamed milk', price: '₹180', cat: 'coffee', emoji: '🥛', bg: 'g2' },
+      { name: 'Cold Brew', desc: '18-hour slow cold brew, served on ice', price: '₹200', cat: 'cold', emoji: '🧊', bg: 'g6' },
+      { name: 'Matcha Latte', desc: 'Ceremonial matcha, oat milk', price: '₹210', cat: 'cold', emoji: '🍵', bg: 'g3' },
+      { name: 'Avocado Toast', desc: 'Sourdough, smashed avo, chilli flakes', price: '₹280', cat: 'food', emoji: '🥑', bg: 'g5' },
+      { name: 'Croissant', desc: 'Buttery, flaky, baked fresh daily', price: '₹150', cat: 'food', emoji: '🥐', bg: 'g7' },
+      { name: 'Chocolate Cake', desc: 'Dark chocolate, ganache, berry compote', price: '₹220', cat: 'dessert', emoji: '🍰', bg: 'g8' },
+      { name: 'Granola Bowl', desc: 'Coconut yogurt, seasonal fruits', price: '₹240', cat: 'food', emoji: '🥗', bg: 'g3' },
+    ];
+
+    function renderMenu(filter = 'all') {
+      const grid = document.getElementById('menuGrid');
+      const filtered = filter === 'all' ? menuItems : menuItems.filter(i => i.cat === filter);
+      grid.innerHTML = filtered.map(item => `
+        <div class="menu-card">
+          <div class="mc-img ${item.bg}">${item.emoji}</div>
+          <div class="mc-body">
+            <h3>${item.name}</h3>
+            <p>${item.desc}</p>
+            <div class="mc-footer">
+              <span class="mc-price">${item.price}</span>
+              <span class="mc-tag">${item.cat}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderMenu();
+
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        renderMenu(this.dataset.filter);
+      });
+    });
+
+    // ── Reviews ──
+    let reviews = [
+      { name: 'Ananya R.', stars: 5, text: 'The best café in Sheikh Sarai by a mile. The cold brew is exceptional and the vibe is exactly what you need on a slow Sunday morning.', date: 'Jan 2026' },
+      { name: 'Karan M.', stars: 5, text: 'My go-to work spot in the neighbourhood. Great WiFi, incredible lattes, and staff who actually remember your order. What more could you ask for?', date: 'Feb 2026' },
+      { name: 'Priya S.', stars: 4, text: 'Love the matcha latte here — it\'s hard to find good matcha in Delhi. The croissants are freshly baked and pair perfectly with a morning espresso.', date: 'Mar 2026' },
+    ];
+
+    function renderReviews() {
+      document.getElementById('reviewsGrid').innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-quote">"</div>
+          <div class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</div>
+          <p class="review-text">${r.text}</p>
+          <div class="reviewer">
+            <div class="r-avatar">${r.name[0]}</div>
+            <div><div class="r-name">${r.name}</div><div class="r-date">${r.date}</div></div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    renderReviews();
+
+    // ── Modal ──
+    const overlay = document.getElementById('modalOverlay');
+    document.getElementById('openModal').addEventListener('click', () => overlay.classList.add('active'));
+    document.getElementById('closeModal').addEventListener('click', () => overlay.classList.remove('active'));
+    overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('active'); });
+
+    // Star picker
+    let selectedStars = 0;
+    document.querySelectorAll('.star-pick').forEach(star => {
+      star.addEventListener('click', function() {
+        selectedStars = +this.dataset.val;
+        document.querySelectorAll('.star-pick').forEach((s, i) => {
+          s.classList.toggle('lit', i < selectedStars);
+        });
+      });
+
+      star.addEventListener('mouseover', function() {
+        const val = +this.dataset.val;
+        document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('lit', i < val));
+      });
+
+      star.addEventListener('mouseout', () => {
+        document.querySelectorAll('.star-pick').forEach((s, i) => s.classList.toggle('lit', i < selectedStars));
+      });
+    });
+
+    // Submit review
+    document.getElementById('submitReview').addEventListener('click', () => {
+      const name = document.getElementById('reviewName').value.trim();
+      const text = document.getElementById('reviewText').value.trim();
+      if (!name || !text || !selectedStars) return;
+
+      reviews.unshift({ name, stars: selectedStars, text, date: 'Mar 2026' });
+      renderReviews();
+      overlay.classList.remove('active');
+
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3500);
+
+      document.getElementById('reviewName').value = '';
+      document.getElementById('reviewText').value = '';
+      selectedStars = 0;
+      document.querySelectorAll('.star-pick').forEach(s => s.classList.remove('lit'));
+    });
+  </script>
+</body>
+</html>
